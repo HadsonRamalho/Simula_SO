@@ -21,7 +21,6 @@ struct Processo {
 
 Processo& Processo::operator=(const Processo& other) {
     if (this != &other) {
-        // Atribui os valores de 'other' para 'this'
         id = other.id;
         tempo_processador = other.tempo_processador;
         prioridade = other.prioridade;
@@ -37,11 +36,7 @@ struct Node {
 
 Node& Node::operator=(const Node& other) {
     if (this != &other) {
-        // Atribui os valores de 'other' para 'this'
         Proc = other.Proc;
-
-        // O ponteiro 'next' não precisa ser clonado, já que 'Node' é uma estrutura.
-        // Se 'Node' contivesse recursos dinâmicos, você precisaria gerenciar a cópia corretamente.
     }
     return *this;
 }
@@ -71,7 +66,6 @@ public:
 
 Queue& Queue::operator=(const Queue& other) {
     if (this != &other) {
-        // Limpe a fila atual
         while (!isEmpty()) {
             dequeue();
         }
@@ -169,7 +163,6 @@ void cadastra_processo_manual(Queue& Fila) {
 
 void cadastra_fifo_auto(Queue& Fila, int qtdProcessosAuto) {
 
-    //Processo Proc;
     Processo Procs[M];
     atribui_random(Procs);
     for (int i = 0; i < qtdProcessosAuto; i++) {
@@ -197,7 +190,6 @@ void executa_fifo(Queue& Fila, bool cadastroAuto = false) {
 
 void prioridade() {
     Processo Procs[M];
-    //Processo ProcsPrior[M];
     for (int i = 0; i < M; i++) {
         Procs[i].id = i;
         Procs[i].tempo_processador = i;
@@ -213,23 +205,16 @@ void prioridade() {
 void executa_sjf(Queue FilaCopy, bool cadastroAuto = false) {
     bool primeiraExecucao = false;
 
-    // Crie uma cópia da fila para não modificar a original
-
-
-    // Vector para armazenar os processos para ordenação
     std::vector<Processo> processos;
 
-    // Preencha o vector com os processos da cópia da fila
     while (!FilaCopy.isEmpty()) {
         processos.push_back(FilaCopy.dequeue());
     }
 
-    // Ordene o vector com base no tempo de processador (SJF)
     std::sort(processos.begin(), processos.end(), [](const Processo& a, const Processo& b) {
         return a.tempo_processador < b.tempo_processador;
         });
 
-    // Execute os processos ordenados
     for (const Processo& atual : processos) {
         if (!primeiraExecucao) {
             cout << "----------- SJF ----------- " << endl;
@@ -240,8 +225,6 @@ void executa_sjf(Queue FilaCopy, bool cadastroAuto = false) {
         cout << "\tID: " << atual.id << endl
             << "\tTempo de Processador: " << atual.tempo_processador << endl
             << "\tPrioridade: " << atual.prioridade << endl << endl;
-
-        // Simule o tempo de execução (descomente se desejar)
         this_thread::sleep_for(chrono::milliseconds(atual.tempo_processador));
     }
 
@@ -312,11 +295,13 @@ void menu() {
 
 void atribui_random(Processo Procs[]) {
     srand((unsigned)time(NULL));
+    const int id_valor = 1111;
+    const int prioridade_valor = 6;
+    const int tempo_valor = 10;
     for (int i = 0; i < M; i++) {
-        int id_random = 0 + (rand() % 1111);
-        int prioridade_random = 0 + (rand() % 6);
-        int tempo_random = 0 + (rand() % 10) * 100;
-        //cout << random << " ";
+        int id_random = 0 + (rand() % id_valor);
+        int prioridade_random = 0 + (rand() % prioridade_valor);
+        int tempo_random = 0 + (rand() % tempo_valor) * 100;
 
         if (id_random == 0)
             id_random++;
